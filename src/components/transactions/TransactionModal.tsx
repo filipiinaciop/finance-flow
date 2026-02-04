@@ -87,144 +87,160 @@ export const TransactionModal = ({
         if (!open) handleClose();
       }}
     >
-      <DialogContent className="sm:max-w-md ">
-        <DialogHeader>
+      <DialogContent
+        className={cn(
+          "w-[90%] sm:max-w-[425px] h-[90vh] sm:h-auto sm:max-h-[85vh]",
+          "flex flex-col p-0 gap-0 rounded-xl overflow-hidden"
+        )}
+      >
+        <DialogHeader className="p-6 pb-4 border-b">
           <DialogTitle className="text-xl font-semibold">
             Nova Transação
           </DialogTitle>
         </DialogHeader>
 
-        {/* Toggle Tipo */}
-        <div className="flex gap-2 p-1 bg-muted rounded-xl">
-          <button
-            type="button"
-            onClick={() => setType("expense")}
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all",
-              type === "expense"
-                ? "bg-expense text-expense-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <TrendingDown className="w-4 h-4" />
-            Despesa
-          </button>
-          <button
-            type="button"
-            onClick={() => setType("income")}
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all",
-              type === "income"
-                ? "bg-income text-income-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <TrendingUp className="w-4 h-4" />
-            Receita
-          </button>
-        </div>
+        {/* Formulário como Flex Container ocupando o espaço restante */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 overflow-hidden"
+        >
+          {/* Área de Scroll (Inputs) */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
+            {/* Toggle Tipo */}
+            <div className="flex gap-2 p-1 bg-muted rounded-xl mb-4">
+              <button
+                type="button"
+                onClick={() => setType("expense")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all",
+                  type === "expense"
+                    ? "bg-expense text-expense-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <TrendingDown className="w-4 h-4" />
+                Despesa
+              </button>
+              <button
+                type="button"
+                onClick={() => setType("income")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all",
+                  type === "income"
+                    ? "bg-income text-income-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <TrendingUp className="w-4 h-4" />
+                Receita
+              </button>
+            </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
-          {/* Valor */}
-          <div className="space-y-2">
-            <Label htmlFor="amount">Valor (R$)</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              placeholder="0,00"
-              className="text-2xl font-bold h-14"
-              {...register("amount", { valueAsNumber: true })}
-            />
-            {errors.amount && (
-              <p className="text-sm text-destructive">
-                {errors.amount.message}
-              </p>
-            )}
-          </div>
-
-          {/* Descrição */}
-          <div className="space-y-2">
-            <Label htmlFor="description">Descrição</Label>
-            <Input
-              id="description"
-              placeholder="Ex: Almoço, Salário..."
-              {...register("description")}
-            />
-            {errors.description && (
-              <p className="text-sm text-destructive">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
-
-          {/* Categoria */}
-          <div className="space-y-2">
-            <Label htmlFor="category">Categoria</Label>
-            <Select
-              value={watch("category") || ""}
-              onValueChange={(value) =>
-                setValue("category", value, { shouldValidate: true })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.category && (
-              <p className="text-sm text-destructive">
-                {errors.category.message}
-              </p>
-            )}
-          </div>
-
-          {/* Data */}
-          <div className="space-y-2">
-            <Label htmlFor="date">Data</Label>
-            <Input id="date" type="date" {...register("date")} />
-            {errors.date && (
-              <p className="text-sm text-destructive">{errors.date.message}</p>
-            )}
-          </div>
-
-          {/* Tag opcional */}
-          <div className="space-y-2">
-            <Label htmlFor="tag">Tag (opcional)</Label>
-            <Input
-              id="tag"
-              placeholder="Ex: urgente, recorrente..."
-              {...register("tag")}
-            />
-          </div>
-
-          {/* Botões */}
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="flex-1"
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              className={cn(
-                "flex-1",
-                type === "income"
-                  ? "bg-income hover:bg-income/90"
-                  : "bg-expense hover:bg-expense/90",
+            {/* Valor */}
+            <div className="space-y-2">
+              <Label htmlFor="amount">Valor (R$)</Label>
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                placeholder="0,00"
+                className="text-2xl font-bold h-14"
+                {...register("amount", { valueAsNumber: true })}
+              />
+              {errors.amount && (
+                <p className="text-sm text-destructive">
+                  {errors.amount.message}
+                </p>
               )}
-            >
-              Adicionar
-            </Button>
+            </div>
+
+            {/* Descrição */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Descrição</Label>
+              <Input
+                id="description"
+                placeholder="Ex: Almoço, Salário..."
+                {...register("description")}
+              />
+              {errors.description && (
+                <p className="text-sm text-destructive">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+
+            {/* Categoria */}
+            <div className="space-y-2">
+              <Label htmlFor="category">Categoria</Label>
+              <Select
+                value={watch("category") || ""}
+                onValueChange={(value) =>
+                  setValue("category", value, { shouldValidate: true })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.category && (
+                <p className="text-sm text-destructive">
+                  {errors.category.message}
+                </p>
+              )}
+            </div>
+
+            {/* Data */}
+            <div className="space-y-2">
+              <Label htmlFor="date">Data</Label>
+              <Input id="date" type="date" {...register("date")} />
+              {errors.date && (
+                <p className="text-sm text-destructive">
+                  {errors.date.message}
+                </p>
+              )}
+            </div>
+
+            {/* Tag opcional */}
+            <div className="space-y-2">
+              <Label htmlFor="tag">Tag (opcional)</Label>
+              <Input
+                id="tag"
+                placeholder="Ex: urgente, recorrente..."
+                {...register("tag")}
+              />
+            </div>
+          </div>
+
+          {/* Rodapé Fixo (Botões) */}
+          <div className="p-6 pt-4 border-t bg-background mt-auto">
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                className="flex-1"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                className={cn(
+                  "flex-1",
+                  type === "income"
+                    ? "bg-income hover:bg-income/90"
+                    : "bg-expense hover:bg-expense/90"
+                )}
+              >
+                Adicionar
+              </Button>
+            </div>
           </div>
         </form>
       </DialogContent>
